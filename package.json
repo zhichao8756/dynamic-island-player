@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "animejs": "^3.2.1",
+    "colorthief": "^2.3.2",
+    "howler": "^2.2.3",
     "path": "^0.12.7",
+    "siriwave": "^2.3.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

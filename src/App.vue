@@ -1,25 +1,36 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import DynamicPlayer from './components/Player/index.vue'
+import DynamicIsland from '@/components/DynamicIsland/index.vue'
 </script>
 
 <template>
   <div style="margin-top: 100px">
-    <DynamicPlayer />
+    <div id="iphone14pro">
+      <DynamicIsland />
+    </div>
   </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+<style lang="scss" scoped>
+$vm_fontsize: 75; // iPhone 6尺寸的根元素大小基准值
+@function rem($px) {
+  @return calc($px / $vm_fontsize ) * 1rem;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+// 根元素大小使用 vw 单位
+$vm_design: 750;
+* {
+  margin: 0;
+  padding: 0;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+#iphone14pro {
+  position: relative;
+  margin: auto;
+  width: rem(375);
+  height: rem(344);
+  overflow: hidden;
+  background-image: url(https://www.apple.com.cn/v/iphone-14-pro/a/images/overview/dynamic-island/dynamic_hw__btl4fomgspyu_large.png);
+  background-size: 100% 100%;
 }
 </style>
