@@ -1,26 +1,29 @@
 <template>
-  <div class="player-container">
+  <div class="player-container" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
+    <!--song info area-->
     <div class="info-container">
-      <div class="cover-container">
-        <img ref="coverRef" src="../../assets/cover.jpg" alt="">
+      <div :class="props.animateState !== 'bigger' ? 'small-cover-container' : 'cover-container'">
+        <img ref="coverRef" :src="songInfo.cover" alt="">
       </div>
-      <div v-show="props.animateState !== 'smaller'" class="title-container">
-        <p>{{ songInfo.title }}</p>
-        <p class="song-style">{{ songInfo.author }}</p>
+      <div ref="titleBox" class="title-container">
+        <p :style="{fontSize: animateState !== 'bigger' ? '13px' : ''}">{{ songInfo.title }}</p>
+        <p v-show="props.animateState === 'bigger'" class="song-style">{{ songInfo.author }}</p>
       </div>
-      <div ref="waveRef" class="wave-container" />
+      <div ref="waveRef" :class="props.animateState !== 'bigger' ? 'wave-container' : 'wave-container'" />
     </div>
-    <div class="operation-container">
+    <!--progress area-->
+    <div v-show="props.animateState === 'bigger'" class="operation-container">
       <div ref="track" class="track">0:00</div>
-      <div class="progress">
+      <div ref="progressBox" class="progress" @click="seek">
         <div class="progress-back">
           <div ref="progress" class="progress-front" />
         </div>
       </div>
       <div ref="duration" class="duration">{{ songInfo.duration }}</div>
     </div>
-    <div class="control-container">
-      <div class="previous btn" />
+    <!--control area-->
+    <div v-if="props.animateState === 'bigger'" class="control-container">
+      <div class="previous btn" @click="previous" />
       <div v-if="playState" class="play btn" @click="toggle" />
       <div v-else class="pause btn" @click="toggle" />
       <div class="next btn" style="margin-right: 0" @click="next" />
@@ -31,11 +34,21 @@
 <script setup>
 import SiriWave from 'siriwave'
 import Player from '@/components/Player/player.js'
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import ColorThief from '@node_modules/colorthief/dist/color-thief.mjs'
 import song1 from '@/assets/audio/rave_digger.mp3'
 import song2 from '@/assets/audio/80s_vibe.mp3'
+import cover1 from '@/assets/cover1.png'
+import cover2 from '@/assets/cover2.png'
+import pinia from '@/store/store'
 
+import { storeToRefs } from 'pinia'
+
+import { usePlayerStore } from '@/store/playerState.js'
+const store = usePlayerStore(pinia)
+const { title, author, cover } = storeToRefs(store)
+
+console.log(title.value)
 const props = defineProps({
   animateState: {
     type: String,
@@ -48,13 +61,15 @@ const props = defineProps({
         title: 'Rave Digger',
         file: song1,
         howl: null,
-        author: 'Cherrystones'
+        author: 'Cherrystones',
+        cover: cover1
       },
       {
         title: '80s Vibe',
         file: song2,
         howl: null,
-        author: 'Tory Lanez'
+        author: 'Tory Lanez',
+        cover: cover2
       }
     ]
   }
@@ -68,35 +83,73 @@ const playerInst = ref()
 const track = ref()
 const progress = ref()
 const duration = ref()
+const progressBox = ref()
+const titleBox = ref()
 const songInfo = reactive({
   title: props.playList[0].title,
   author: props.playList[0].author,
-  duration: '0:00'
+  duration: '0:00',
+  cover: props.playList[0].cover
 })
 onMounted(async () => {
   await nextTick()
   initWave()
+  initPlayer()
 })
+// auto toggle next song
+watch(title, (newValue, oldValue) => {
+  console.log(newValue)
+  songInfo.title = title.value
+  songInfo.author = author.value
+  songInfo.cover = cover.value
+  initWave().then(() => {
+    startWave()
+  })
+})
+
+// watch the dynamic player animation state
+watch(
+  () => props.animateState,
+  async (newval) => {
+    console.log(2233239999)
+    // await initWave()
+    if (newval === 'bigger') {
+      bigger()
+    }
+  })
 function play () {
-  playerInst.value = new Player(props.playList, track.value, progress.value, duration.value)
-  // 此处添加target 查询目标dom
   playerInst.value.play().then(res => {
     songInfo.title = res.title
     songInfo.author = res.author
+    songInfo.cover = res.cover
+    initWave()
   })
+}
+function initPlayer () {
+  // 此处添加target 查询目标dom
+  playerInst.value = new Player(props.playList, track.value, progress.value, duration.value)
 }
 function stop () {
   playerInst.value.pause()
 }
 function initWave () {
-  getImgColor().then(() => {
-    waveInstance.value = new SiriWave({
-      container: waveRef.value,
-      width: 50,
-      height: 50,
-      style: 'ios',
-      curveDefinition: colorPalette.value,
-      autostart: false
+  return new Promise((resolve) => {
+    getImgColor().then(() => {
+      console.log(props.animateState)
+      if (waveInstance.value) {
+        waveInstance.value.dispose()
+      }
+      console.log(props.animateState)
+      waveInstance.value = new SiriWave({
+        container: waveRef.value,
+        width: props.animateState === 'smaller' ? 50 : 50,
+        height: props.animateState === 'smaller' ? 50 : 50,
+        style: 'ios',
+        curveDefinition: colorPalette.value,
+        autostart: false,
+        speed: 0.1
+      })
+      resolve()
     })
   })
 }
@@ -110,13 +163,16 @@ function getImgColor () {
   return new Promise((resolve, reject) => {
     const colorThief = new ColorThief()
     const img = coverRef.value
+    console.log(img)
     img.addEventListener('load', function () {
       const colorList = colorThief.getPalette(img)
+      console.log(colorList)
       if (colorList.length) {
         colorPalette.value = [
           { attenuation: -2, lineWidth: 3, opacity: 1, color: colorList[0].join(',') },
           { attenuation: 2, lineWidth: 3, opacity: 1, color: colorList[1].join(',') },
-          { attenuation: 1, lineWidth: 2, opacity: 1, color: colorList[2].join(',') }
+          { attenuation: 1, lineWidth: 2, opacity: 1, color: colorList[2].join(',') },
+          { attenuation: 1, lineWidth: 2, opacity: 1, color: colorList[3].join(',') }
         ]
         resolve()
       }
@@ -125,7 +181,6 @@ function getImgColor () {
 }
 function toggle () {
   if (playState.value) {
-    console.log(2222)
     startWave()
     play()
   } else {
@@ -136,12 +191,35 @@ function toggle () {
 }
 function next () {
   playerInst.value.skip('next').then(res => {
-    console.log(res)
     songInfo.title = res.title
     songInfo.author = res.author
+    songInfo.cover = res.cover
     songInfo.duration = res.duration
+    initWave().then(() => {
+      startWave()
+    })
   })
   playState.value = false
+}
+function previous () {
+  playerInst.value.skip('prev').then(res => {
+    songInfo.title = res.title
+    songInfo.author = res.author
+    songInfo.cover = res.cover
+    songInfo.duration = res.duration
+    // when toggle next song, init the wave
+    initWave().then(() => {
+      startWave()
+    })
+  })
+  playState.value = false
+}
+function seek (event) {
+  playerInst.value.seek(event.offsetX / progressBox.value.clientWidth)
+}
+function bigger () {
+  const text = titleBox.value
+  text.classList.add('animateText')
 }
 </script>
 
@@ -153,18 +231,44 @@ $vm_fontsize: 75; // iPhone 6尺寸的根元素大小基准值
 
 // 根元素大小使用 vw 单位
 $vm_design: 750;
+@keyframes messageFilter {
+  0% {
+    transform: scale(0);
+    transform: translateY(-10px);
+    filter: blur(2px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animateText {
+  animation: messageFilter 300ms linear;
+
+}
 .player-container {
   font-size: rem(16);
   color: #ffffff;
   padding: rem(16);
   .info-container {
     display: flex;
+    align-items: center;
+    justify-content: space-around;
     .cover-container {
       width: rem(60);
       height: rem(60);
       margin-right: rem(16);
+      transition: all 300ms linear;
       img {
         border-radius: rem(10);
+        width: 100%;
+      }
+    }
+    .small-cover-container {
+      width: rem(30);
+      height: rem(30);
+      transition: all 300ms linear;
+      img {
+        border-radius: rem(30);
         width: 100%;
       }
     }
@@ -188,6 +292,11 @@ $vm_design: 750;
       width: rem(50);
       height: rem(50);
       border-radius: rem(50);
+    }
+    .small-wave-container {
+      width: rem(30);
+      height: rem(30);
+      border-radius: rem(30);
     }
   }
   .operation-container {

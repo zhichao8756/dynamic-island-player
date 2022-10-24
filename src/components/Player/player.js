@@ -1,4 +1,9 @@
 import { Howl, Howler } from 'howler'
+import { storeToRefs } from 'pinia'
+import pinia from '@/store/store'
+import { usePlayerStore } from '@/store/playerState.js'
+const store = usePlayerStore(pinia)
+const { title, author, cover } = storeToRefs(store)
 
 class Player {
   constructor (playlist, timeElement, progressElement, durationElement) {
@@ -14,16 +19,13 @@ class Player {
    * @param  {Number} index Index of the song in the playlist (leave empty to play the first or current).
    */
   play = (index) => {
-    console.log(index)
     const self = this
     return new Promise((resolve, reject) => {
       let sound
       let totalTime = ''
-      console.log(index)
       index = typeof index === 'number' ? index : self.index
+      console.log(index)
       const data = self.playlist[index]
-      console.log(self.index)
-      console.log(data)
       // If we already loaded this track, use the current one.
       // Otherwise, setup and load a new Howl.
       if (data.howl) {
@@ -40,8 +42,13 @@ class Player {
             const songInfo = {
               title: data.title,
               soundState: sound.state(),
-              author: data.author
+              author: data.author,
+              cover: data.cover
             }
+            store.title = data.title
+            store.author = data.author
+            store.cover = data.cover
+            console.log(store)
             resolve(songInfo)
             // Start the wave animation if we have already loaded
             // pauseBtn.style.display = 'block'
@@ -64,14 +71,12 @@ class Player {
           },
           onseek: function () {
             // Start updating the progress of the track.
-            // requestAnimationFrame(this.step)
+            requestAnimationFrame(self.step)
           }
         })
       }
       // Begin playing the sound.
       sound.play()
-      this.getTrack(data.title)
-      this.getSoundState(sound.state())
       /* if (sound.state() === 'loaded') {
         playBtn.style.display = 'none'
         pauseBtn.style.display = 'block'

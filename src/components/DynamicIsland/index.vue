@@ -20,7 +20,7 @@ onMounted(async () => {
 })
 function start () {
   clearInterval(timer.value)
-  // isClick()
+  isClick()
   if (animationState.value === 'smaller') {
     animeLong()
   } else if (animationState.value === 'longer') {
@@ -28,6 +28,7 @@ function start () {
   }
 }
 function animeSmall () {
+  animationState.value = 'smaller'
   anime({
     targets: '.dynamic-island',
     keyframes: [
@@ -37,7 +38,7 @@ function animeSmall () {
     ],
     easing: 'easeInOutSine',
     complete: function () {
-      animationState.value = 'smaller'
+      // animationState.value = 'smaller'
     }
   })
 }
@@ -73,7 +74,7 @@ function animeBig () {
 }
 // 如果长时间不操作, 恢复到原始的状态
 function isClick () {
-  count.value = 60
+  count.value = 10
   timer.value = setInterval(() => {
     console.log(count.value)
     count.value-- // 递减
