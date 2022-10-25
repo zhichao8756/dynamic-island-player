@@ -2,7 +2,7 @@
 
 a vue-audio-player based on Howler.js
 ## [Demo](https://zhichao8756.github.io/player-demo/)
-* [https://zhichao8756.github.io/deploy-demo/](https://zhichao8756.github.io/player-demo/)
+* [https://zhichao8756.github.io/player-demo/](https://zhichao8756.github.io/player-demo/)
 ## Install
 
 ```bash
