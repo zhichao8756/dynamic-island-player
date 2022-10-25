@@ -74,7 +74,7 @@ function animeBig () {
 }
 // 如果长时间不操作, 恢复到原始的状态
 function isClick () {
-  count.value = 10
+  count.value = 30
   timer.value = setInterval(() => {
     console.log(count.value)
     count.value-- // 递减

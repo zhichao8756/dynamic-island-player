@@ -2,11 +2,11 @@
   <div class="player-container" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
     <!--song info area-->
     <div class="info-container">
-      <div :class="props.animateState !== 'bigger' ? 'small-cover-container' : 'cover-container'">
+      <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? 0 : '12px'}">
         <img ref="coverRef" :src="songInfo.cover" alt="">
       </div>
       <div ref="titleBox" class="title-container">
-        <p :style="{fontSize: animateState !== 'bigger' ? '13px' : ''}">{{ songInfo.title }}</p>
+        <p class="title-style" :style="titleStyle()">{{ songInfo.title }}</p>
         <p v-show="props.animateState === 'bigger'" class="song-style">{{ songInfo.author }}</p>
       </div>
       <div ref="waveRef" :class="props.animateState !== 'bigger' ? 'wave-container' : 'wave-container'" />
@@ -34,6 +34,7 @@
 <script setup>
 import SiriWave from 'siriwave'
 import Player from '@/components/Player/player.js'
+import anime from 'animejs'
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import ColorThief from '@node_modules/colorthief/dist/color-thief.mjs'
 import song1 from '@/assets/audio/rave_digger.mp3'
@@ -45,10 +46,10 @@ import pinia from '@/store/store'
 import { storeToRefs } from 'pinia'
 
 import { usePlayerStore } from '@/store/playerState.js'
+
 const store = usePlayerStore(pinia)
 const { title, author, cover } = storeToRefs(store)
 
-console.log(title.value)
 const props = defineProps({
   animateState: {
     type: String,
@@ -58,7 +59,7 @@ const props = defineProps({
     type: Array,
     default: () => [
       {
-        title: 'Rave Digger',
+        title: 'Rave Digger1231232131232132323223',
         file: song1,
         howl: null,
         author: 'Cherrystones',
@@ -85,6 +86,7 @@ const progress = ref()
 const duration = ref()
 const progressBox = ref()
 const titleBox = ref()
+const coverBox = ref()
 const songInfo = reactive({
   title: props.playList[0].title,
   author: props.playList[0].author,
@@ -116,6 +118,9 @@ watch(
     if (newval === 'bigger') {
       bigger()
     }
+    if (newval === 'smaller') {
+      smaller()
+    }
   })
 function play () {
   playerInst.value.play().then(res => {
@@ -142,8 +147,8 @@ function initWave () {
       console.log(props.animateState)
       waveInstance.value = new SiriWave({
         container: waveRef.value,
-        width: props.animateState === 'smaller' ? 50 : 50,
-        height: props.animateState === 'smaller' ? 50 : 50,
+        width: 50,
+        height: 50,
         style: 'ios',
         curveDefinition: colorPalette.value,
         autostart: false,
@@ -220,6 +225,52 @@ function seek (event) {
 function bigger () {
   const text = titleBox.value
   text.classList.add('animateText')
+  anime({
+    targets: coverBox.value,
+    width: [
+      { value: 60, duration: 200, easing: 'easeInSine' }
+    ],
+    height: [
+      { value: 60, duration: 200, easing: 'easeInSine' }
+    ],
+    easing: 'linear',
+    duration: 200
+  })
+  anime({
+    targets: coverRef.value,
+    borderRadius: [
+      { value: 10, duration: 200, easing: 'easeInSine' }
+    ],
+    easing: 'linear',
+    duration: 200
+  })
+}
+function smaller () {
+  anime({
+    targets: coverBox.value,
+    width: [
+      { value: 33, duration: 200, easing: 'easeInSine' }
+    ],
+    height: [
+      { value: 33, duration: 200, easing: 'easeInSine' }
+    ],
+    easing: 'linear',
+    duration: 200
+  })
+  anime({
+    targets: coverRef.value,
+    borderRadius: [
+      { value: 33, duration: 200, easing: 'easeInSine' }
+    ],
+    easing: 'linear',
+    duration: 200
+  })
+}
+function titleStyle () {
+  return {
+    fontSize: props.animateState !== 'bigger' ? '13px' : '',
+    width: props.animateState !== 'bigger' ? '80px' : '145px'
+  }
 }
 </script>
 
@@ -239,6 +290,7 @@ $vm_design: 750;
   }
   100% {
     transform: scale(1);
+    transform: translateY(0px);
   }
 }
 .animateText {
@@ -253,11 +305,12 @@ $vm_design: 750;
     display: flex;
     align-items: center;
     justify-content: space-around;
+    position: relative;
+    height: rem(52);
     .cover-container {
-      width: rem(60);
-      height: rem(60);
+      //width: rem(60);
+      //height: rem(60);
       margin-right: rem(16);
-      transition: all 300ms linear;
       img {
         border-radius: rem(10);
         width: 100%;
@@ -266,7 +319,8 @@ $vm_design: 750;
     .small-cover-container {
       width: rem(30);
       height: rem(30);
-      transition: all 300ms linear;
+      position: absolute;
+       left: rem(5);
       img {
         border-radius: rem(30);
         width: 100%;
@@ -276,22 +330,30 @@ $vm_design: 750;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: fixed;
       p {
         margin: 0;
       }
       .song-style {
-        width: rem(180);
+        width: rem(140);
         color: #b2b2b2;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-weight: 500;
       }
+      .title-style {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     .wave-container {
       width: rem(50);
       height: rem(50);
       border-radius: rem(50);
+      position: absolute;
+      right: rem(0);
     }
     .small-wave-container {
       width: rem(30);
@@ -306,10 +368,15 @@ $vm_design: 750;
     font-weight: 600;
     justify-content: space-around;
     margin-top: rem(8);
+    position: fixed;
+    bottom: rem(50);
+    left: 50%;
+    transform: translateX(-50%);
     .progress {
       width: rem(200);
       display: flex;
       align-items: center;
+      margin: 0 10px;
       .progress-back {
         width: 100%;
         height: rem(5);
@@ -331,6 +398,10 @@ $vm_design: 750;
     display: flex;
     justify-content: center;
     margin-top: rem(8);
+    position: fixed;
+    bottom: rem(15);
+    left: 50%;
+    transform: translateX(-50%);
     .btn {
       width: rem(32);
       height: rem(32);
