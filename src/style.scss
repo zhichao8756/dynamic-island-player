@@ -32,23 +32,6 @@ a:hover {
   color: #535bf2;
 }
 
-$vm_fontsize: 75; // iPhone 6尺寸的根元素大小基准值
-@function rem($px) {
-  @return calc($px / $vm_fontsize ) * 1rem;
-}
-
-// 根元素大小使用 vw 单位
-$vm_design: 750;
-html {
-  font-size: calc($vm_fontsize / ($vm_design / 2)) * 100vw;
-  // 同时，通过Media Queries 限制根元素最大最小值
-  @media screen and (max-width: 320px) {
-    font-size: 64px;
-  }
-  @media screen and (min-width: 540px) {
-    font-size: 108px;
-  }
-}
 body {
   margin: 0;
   display: flex;

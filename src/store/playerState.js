@@ -6,7 +6,8 @@ export const usePlayerStore = defineStore('player', {
     return {
       title: '',
       author: '',
-      cover: ''
+      cover: '',
+      soundState: ''
     }
   }
 })

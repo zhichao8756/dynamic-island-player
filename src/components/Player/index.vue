@@ -1,7 +1,7 @@
 <template>
   <div class="player-container" :style="{padding: animateState !== 'bigger' ? '0px 5px' : ''}">
     <!--song info area-->
-    <div class="info-container">
+    <div ref="infoBox" class="info-container">
       <div ref="coverBox" class="small-cover-container" :style="{marginRight: props.animateState !== 'bigger' ? 0 : '12px'}">
         <img ref="coverRef" :src="songInfo.cover" alt="">
       </div>
@@ -9,7 +9,7 @@
         <p class="title-style" :style="titleStyle()">{{ songInfo.title }}</p>
         <p v-show="props.animateState === 'bigger'" class="song-style">{{ songInfo.author }}</p>
       </div>
-      <div ref="waveRef" :class="props.animateState !== 'bigger' ? 'wave-container' : 'wave-container'" />
+      <div v-show="props.animateState !== 'smaller'" ref="waveRef" class="wave-container" />
     </div>
     <!--progress area-->
     <div v-show="props.animateState === 'bigger'" class="operation-container">
@@ -48,7 +48,7 @@ import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/store/playerState.js'
 
 const store = usePlayerStore(pinia)
-const { title, author, cover } = storeToRefs(store)
+const { title, author, cover, soundState } = storeToRefs(store)
 
 const props = defineProps({
   animateState: {
@@ -87,6 +87,7 @@ const duration = ref()
 const progressBox = ref()
 const titleBox = ref()
 const coverBox = ref()
+const infoBox = ref()
 const songInfo = reactive({
   title: props.playList[0].title,
   author: props.playList[0].author,
@@ -100,7 +101,6 @@ onMounted(async () => {
 })
 // auto toggle next song
 watch(title, (newValue, oldValue) => {
-  console.log(newValue)
   songInfo.title = title.value
   songInfo.author = author.value
   songInfo.cover = cover.value
@@ -113,15 +113,21 @@ watch(title, (newValue, oldValue) => {
 watch(
   () => props.animateState,
   async (newval) => {
-    console.log(2233239999)
     // await initWave()
     if (newval === 'bigger') {
       bigger()
+      if (coverAnimation.value) stopCoverAinimate()
     }
     if (newval === 'smaller') {
       smaller()
+      if (soundState.value === 'playing') {
+        coverAnimate()
+      }
     }
   })
+function test () {
+  console.log(soundState.value)
+}
 function play () {
   playerInst.value.play().then(res => {
     songInfo.title = res.title
@@ -140,11 +146,9 @@ function stop () {
 function initWave () {
   return new Promise((resolve) => {
     getImgColor().then(() => {
-      console.log(props.animateState)
       if (waveInstance.value) {
         waveInstance.value.dispose()
       }
-      console.log(props.animateState)
       waveInstance.value = new SiriWave({
         container: waveRef.value,
         width: 50,
@@ -168,10 +172,8 @@ function getImgColor () {
   return new Promise((resolve, reject) => {
     const colorThief = new ColorThief()
     const img = coverRef.value
-    console.log(img)
     img.addEventListener('load', function () {
       const colorList = colorThief.getPalette(img)
-      console.log(colorList)
       if (colorList.length) {
         colorPalette.value = [
           { attenuation: -2, lineWidth: 3, opacity: 1, color: colorList[0].join(',') },
@@ -222,6 +224,7 @@ function previous () {
 function seek (event) {
   playerInst.value.seek(event.offsetX / progressBox.value.clientWidth)
 }
+// when island is bigger
 function bigger () {
   const text = titleBox.value
   text.classList.add('animateText')
@@ -232,6 +235,17 @@ function bigger () {
     ],
     height: [
       { value: 60, duration: 200, easing: 'easeInSine' }
+    ],
+    top: [
+      { value: 0, duration: 200, easing: 'easeInSine' }
+    ],
+    easing: 'linear',
+    duration: 200
+  })
+  anime({
+    targets: infoBox.value,
+    height: [
+      { value: 65, duration: 200, easing: 'easeInSine' }
     ],
     easing: 'linear',
     duration: 200
@@ -245,14 +259,31 @@ function bigger () {
     duration: 200
   })
 }
+// when island is smaller
 function smaller () {
   anime({
     targets: coverBox.value,
     width: [
-      { value: 33, duration: 200, easing: 'easeInSine' }
+      { value: 26, duration: 200, easing: 'easeInSine' }
     ],
     height: [
-      { value: 33, duration: 200, easing: 'easeInSine' }
+      { value: 26, duration: 200, easing: 'easeInSine' }
+    ],
+    top: [
+      { value: 12, duration: 200, easing: 'easeInSine' }
+    ],
+    /* rotate: {
+      value: 360,
+      duration: 2000,
+      easing: 'linear'
+    }, */
+    easing: 'linear',
+    duration: 200
+  })
+  anime({
+    targets: infoBox.value,
+    height: [
+      { value: 50, duration: 200, easing: 'easeInSine' }
     ],
     easing: 'linear',
     duration: 200
@@ -269,19 +300,39 @@ function smaller () {
 function titleStyle () {
   return {
     fontSize: props.animateState !== 'bigger' ? '13px' : '',
-    width: props.animateState !== 'bigger' ? '80px' : '145px'
+    width: props.animateState !== 'bigger' ? '140px' : '145px',
+    textAlign: props.animateState !== 'bigger' ? 'center' : 'left'
   }
 }
+const coverAnimation = ref(null)
+function coverAnimate () {
+  coverAnimation.value = anime({
+    targets: coverBox.value,
+    rotate: {
+      value: 360,
+      duration: 2000,
+      easing: 'linear'
+    },
+    loop: true,
+    easing: 'linear',
+    duration: 200
+  })
+}
+function stopCoverAinimate () {
+  anime.set(coverBox.value, { rotate: 0 })
+  coverAnimation.value.remove(coverBox.value)
+}
+// watch sound state
+/* watch(props.animateState, (newValue, oldValue) => {
+  if (soundState.value === 'playing' && props.animateState === 'smaller') {
+    coverAnimate()
+  } else {
+    // stopCoverAinimate()
+  }
+}) */
 </script>
 
 <style lang="scss" scoped>
-$vm_fontsize: 75; // iPhone 6尺寸的根元素大小基准值
-@function rem($px) {
-  @return calc($px / $vm_fontsize ) * 1rem;
-}
-
-// 根元素大小使用 vw 单位
-$vm_design: 750;
 @keyframes messageFilter {
   0% {
     transform: scale(0);
@@ -298,31 +349,32 @@ $vm_design: 750;
 
 }
 .player-container {
-  font-size: rem(16);
+  font-size: 16px;
   color: #ffffff;
-  padding: rem(16);
+  padding: 16px;
   .info-container {
     display: flex;
     align-items: center;
     justify-content: space-around;
     position: relative;
-    height: rem(52);
+    height: 45px;
     .cover-container {
       //width: rem(60);
       //height: rem(60);
-      margin-right: rem(16);
+      margin-right: 16px;
       img {
-        border-radius: rem(10);
+        border-radius: 10px;
         width: 100%;
       }
     }
     .small-cover-container {
-      width: rem(30);
-      height: rem(30);
+      width: 25px;
+      height: 25px;
       position: absolute;
-       left: rem(5);
+      left: 5px;
+      top: 12px;
       img {
-        border-radius: rem(30);
+        border-radius: 30px;
         width: 100%;
       }
     }
@@ -335,7 +387,7 @@ $vm_design: 750;
         margin: 0;
       }
       .song-style {
-        width: rem(140);
+        width: 140px;
         color: #b2b2b2;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -349,63 +401,63 @@ $vm_design: 750;
       }
     }
     .wave-container {
-      width: rem(50);
-      height: rem(50);
-      border-radius: rem(50);
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
       position: absolute;
-      right: rem(0);
+      right: 0;
     }
     .small-wave-container {
-      width: rem(30);
-      height: rem(30);
-      border-radius: rem(30);
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
     }
   }
   .operation-container {
     display: flex;
-    font-size: rem(8);
+    font-size: 8px;
     color: #b2b2b2;
     font-weight: 600;
     justify-content: space-around;
-    margin-top: rem(8);
+    margin-top: 8px;
     position: fixed;
-    bottom: rem(50);
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     .progress {
-      width: rem(200);
+      width: 200px;
       display: flex;
       align-items: center;
       margin: 0 10px;
       .progress-back {
         width: 100%;
-        height: rem(5);
-        border-radius: rem(3);
+        height: 5px;
+        border-radius: 3px;
         background: rgba(178, 178, 178, 0.34);
         .progress-front {
           width: 0%;
           height: 100%;
-          border-radius: rem(3);
+          border-radius: 3px;
           background: #ffffff;
         }
       }
     }
     .duration {
-      width: rem(25);
+      width: 25px;
     }
   }
   .control-container {
     display: flex;
     justify-content: center;
-    margin-top: rem(8);
+    margin-top: 8px;
     position: fixed;
-    bottom: rem(15);
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     .btn {
-      width: rem(32);
-      height: rem(32);
-      margin-right: rem(32);
+      width: 32px;
+      height: 32px;
+      margin-right: 32px;
     }
     .previous {
       background: url("../../assets/ios-rewind.svg");

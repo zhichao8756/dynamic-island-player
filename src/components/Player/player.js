@@ -48,7 +48,7 @@ class Player {
             store.title = data.title
             store.author = data.author
             store.cover = data.cover
-            console.log(store)
+            store.soundState = 'playing'
             resolve(songInfo)
             // Start the wave animation if we have already loaded
             // pauseBtn.style.display = 'block'
@@ -62,6 +62,8 @@ class Player {
             self.skip('next')
           },
           onpause: function () {
+            console.log(sound.playing())
+            store.soundState = 'pause'
             // Stop the wave animation.
             // wave.container.style.display = 'none'
           },
