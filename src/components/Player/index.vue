@@ -59,7 +59,7 @@ const props = defineProps({
     type: Array,
     default: () => [
       {
-        title: 'Rave Digger1231232131232132323223',
+        title: 'Rave Digger',
         file: song1,
         howl: null,
         author: 'Cherrystones',
