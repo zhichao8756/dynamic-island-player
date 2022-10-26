@@ -1,7 +1,17 @@
 <template>
   <div>
     <div ref="dynamic" class="dynamic-island" @click="start">
-      <Player :animate-state="animationState" />
+      <Player
+        v-if="playList.length"
+        ref="player"
+        :animate-state="animationState"
+        :play-list="playList"
+        :volume="volume"
+        @play="play"
+        @pause="pause"
+        @next="next"
+        @previous="previous"
+      />
     </div>
   </div>
 </template>
@@ -14,7 +24,17 @@ const dynamic = ref()
 const animationState = ref('smaller')
 const timer = ref(null)
 const count = ref(0)
-
+const props = defineProps({
+  playList: {
+    type: Array,
+    default: () => []
+  },
+  volume: {
+    type: Number,
+    default: 0.5
+  }
+})
+const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])
 onMounted(async () => {
   await nextTick()
 })
@@ -28,6 +48,9 @@ function start () {
   }
 }
 function animeSmall () {
+  /** @description event dynamic island translate smaller */
+
+  emit('animationSmall')
   animationState.value = 'smaller'
   anime({
     targets: '.dynamic-island',
@@ -45,6 +68,8 @@ function animeSmall () {
 
 // 灵动岛对应dom
 function animeLong () {
+  /** @description event dynamic island translate longer */
+  emit('animationLong')
   anime({
     targets: '.dynamic-island',
     keyframes: [
@@ -59,6 +84,9 @@ function animeLong () {
   })
 }
 function animeBig () {
+  /** @description event dynamic island translate bigger */
+
+  emit('animationBig')
   anime({
     targets: '.dynamic-island',
     keyframes: [
@@ -84,6 +112,57 @@ function isClick () {
     }
   }, 1000)
 }
+const player = ref()
+/** *** @description expose  internal methods ******/
+
+function getSoundState () {
+  return player.value.getState()
+}
+function setVolume (val) {
+  player.value.setVolume(val)
+}
+function setMute (val) {
+  player.value.setMute(val)
+}
+function seekBySeconds (val) {
+  player.value.seekBySeconds(val)
+}
+function toggle () {
+  player.value.toggle()
+}
+function playNext () {
+  player.value.next()
+}
+function playPrevious () {
+  player.value.previous()
+}
+/** *** @description event emit ******/
+
+function play () {
+  /** @description event sound play */
+  emit('play')
+}
+function pause () {
+  /** @description event sound pause */
+  emit('pause')
+}
+function next () {
+  /** @description event next */
+  emit('next')
+}
+function previous () {
+  /** @description event  previous */
+  emit('previous')
+}
+defineExpose({
+  getSoundState,
+  setVolume,
+  setMute,
+  seekBySeconds,
+  toggle,
+  playNext,
+  playPrevious
+})
 </script>
 <style lang="scss" scoped>
 * {

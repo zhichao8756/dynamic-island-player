@@ -2,6 +2,61 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { DynamicIslandPlayer } from '@/components/index.js'
+import { ref } from 'vue'
+import song1 from '@/assets/audio/rave_digger.mp3'
+import song2 from '@/assets/audio/80s_vibe.mp3'
+import cover1 from '@/assets/cover1.png'
+import cover2 from '@/assets/cover2.png'
+const player = ref()
+const playList = ref([
+  {
+    title: 'Rave Digger',
+    file: song1,
+    howl: null,
+    author: 'Cherrystones',
+    cover: cover1
+  },
+  {
+    title: '80s Vibe',
+    file: song2,
+    howl: null,
+    author: 'Tory Lanez',
+    cover: cover2
+  }
+])
+function test () {
+  console.log('233223')
+}
+function play () {
+  console.log('play')
+}
+function next () {
+  console.log('next')
+}
+function previous () {
+  console.log('previous')
+}
+function set () {
+  player.value.setVolume(0.9)
+}
+function setMute () {
+  player.value.setMute(true)
+}
+function setSound () {
+  player.value.setMute(false)
+}
+function seekTo () {
+  player.value.seekBySeconds(30)
+}
+function toggle () {
+  player.value.toggle()
+}
+function playNext () {
+  player.value.playNext()
+}
+function playPrevious () {
+  player.value.playPrevious()
+}
 </script>
 
 <template>
@@ -9,7 +64,17 @@ import { DynamicIslandPlayer } from '@/components/index.js'
     <!--    <div id="iphone14pro">
 
     </div>-->
-    <DynamicIslandPlayer />
+    <DynamicIslandPlayer
+      ref="player" :play-list="playList" :volume="0.8" @play="play" @next="next"
+      @previous="previous"
+      @animationSmall="test" />
+    <button @click="set">set volume</button>
+    <button @click="setMute">set mute</button>
+    <button @click="setSound">set sound</button>
+    <button @click="seekTo">jumpTo 30s</button>
+    <button @click="toggle">play / pause</button>
+    <button @click="playNext">next song</button>
+    <button @click="playPrevious">previous song</button>
   </div>
 </template>
 

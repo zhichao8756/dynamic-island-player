@@ -37,10 +37,10 @@ import Player from '@/components/Player/player.js'
 import anime from 'animejs'
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import ColorThief from '@node_modules/colorthief/dist/color-thief.mjs'
-import song1 from '@/assets/audio/rave_digger.mp3'
-import song2 from '@/assets/audio/80s_vibe.mp3'
-import cover1 from '@/assets/cover1.png'
-import cover2 from '@/assets/cover2.png'
+// import song1 from '@/assets/audio/rave_digger.mp3'
+// import song2 from '@/assets/audio/80s_vibe.mp3'
+// import cover1 from '@/assets/cover1.png'
+// import cover2 from '@/assets/cover2.png'
 import pinia from '@/store/store'
 
 import { storeToRefs } from 'pinia'
@@ -49,7 +49,6 @@ import { usePlayerStore } from '@/store/playerState.js'
 
 const store = usePlayerStore(pinia)
 const { title, author, cover, soundState } = storeToRefs(store)
-
 const props = defineProps({
   animateState: {
     type: String,
@@ -57,24 +56,14 @@ const props = defineProps({
   },
   playList: {
     type: Array,
-    default: () => [
-      {
-        title: 'Rave Digger',
-        file: song1,
-        howl: null,
-        author: 'Cherrystones',
-        cover: cover1
-      },
-      {
-        title: '80s Vibe',
-        file: song2,
-        howl: null,
-        author: 'Tory Lanez',
-        cover: cover2
-      }
-    ]
+    default: () => []
+  },
+  volume: {
+    type: Number,
+    default: 0.5
   }
 })
+const emit = defineEmits(['play', 'pause', 'previous', 'next'])
 const waveRef = ref()
 const waveInstance = ref()
 const coverRef = ref()
@@ -116,7 +105,7 @@ watch(
     // await initWave()
     if (newval === 'bigger') {
       bigger()
-      if (coverAnimation.value) stopCoverAinimate()
+      if (coverAnimation.value) stopCoverAnimate()
     }
     if (newval === 'smaller') {
       smaller()
@@ -125,10 +114,10 @@ watch(
       }
     }
   })
-function test () {
-  console.log(soundState.value)
-}
 function play () {
+  if (props.animateState === 'smaller') {
+    coverAnimation.value.play()
+  }
   playerInst.value.play().then(res => {
     songInfo.title = res.title
     songInfo.author = res.author
@@ -139,8 +128,12 @@ function play () {
 function initPlayer () {
   // 此处添加target 查询目标dom
   playerInst.value = new Player(props.playList, track.value, progress.value, duration.value)
+  playerInst.value.volume(props.volume)
 }
 function stop () {
+  if (props.animateState === 'smaller') {
+    coverAnimation.value.pause()
+  }
   playerInst.value.pause()
 }
 function initWave () {
@@ -190,9 +183,11 @@ function toggle () {
   if (playState.value) {
     startWave()
     play()
+    emit('play')
   } else {
     stopWave()
     stop()
+    emit('pause')
   }
   playState.value = !playState.value
 }
@@ -202,6 +197,7 @@ function next () {
     songInfo.author = res.author
     songInfo.cover = res.cover
     songInfo.duration = res.duration
+    emit('next')
     initWave().then(() => {
       startWave()
     })
@@ -214,6 +210,7 @@ function previous () {
     songInfo.author = res.author
     songInfo.cover = res.cover
     songInfo.duration = res.duration
+    emit('previous')
     // when toggle next song, init the wave
     initWave().then(() => {
       startWave()
@@ -318,18 +315,39 @@ function coverAnimate () {
     duration: 200
   })
 }
-function stopCoverAinimate () {
+function stopCoverAnimate () {
   anime.set(coverBox.value, { rotate: 0 })
   coverAnimation.value.remove(coverBox.value)
 }
-// watch sound state
-/* watch(props.animateState, (newValue, oldValue) => {
-  if (soundState.value === 'playing' && props.animateState === 'smaller') {
-    coverAnimate()
-  } else {
-    // stopCoverAinimate()
-  }
-}) */
+
+function getState () {
+  return soundState.value
+}
+function setVolume (val) {
+  playerInst.value.volume(val)
+}
+function setMute (val) {
+  playerInst.value.mute(val)
+}
+function seekBySeconds (val) {
+  playerInst.value.seekBySeconds(val)
+}
+defineExpose({
+  /** @description get sound state */
+  getState,
+  /** @description set sound volume */
+  setVolume,
+  /** @description set sound mute */
+  setMute,
+  /** @description skip to the song by seconds */
+  seekBySeconds,
+  /** @description play or pause the song */
+  toggle,
+  /** @description toggle next the song */
+  next,
+  /** @description toggle previous the song */
+  previous
+})
 </script>
 
 <style lang="scss" scoped>

@@ -24,7 +24,6 @@ class Player {
       let sound
       let totalTime = ''
       index = typeof index === 'number' ? index : self.index
-      console.log(index)
       const data = self.playlist[index]
       // If we already loaded this track, use the current one.
       // Otherwise, setup and load a new Howl.
@@ -62,7 +61,6 @@ class Player {
             self.skip('next')
           },
           onpause: function () {
-            console.log(sound.playing())
             store.soundState = 'pause'
             // Stop the wave animation.
             // wave.container.style.display = 'none'
@@ -79,14 +77,6 @@ class Player {
       }
       // Begin playing the sound.
       sound.play()
-      /* if (sound.state() === 'loaded') {
-        playBtn.style.display = 'none'
-        pauseBtn.style.display = 'block'
-      } else {
-        loading.style.display = 'block'
-        playBtn.style.display = 'none'
-        pauseBtn.style.display = 'none'
-      } */
       self.index = index
     })
   }
@@ -99,9 +89,6 @@ class Player {
     const seek = sound.seek() || 0
     this.timeElement.innerHTML = this.formatTime(Math.round(seek))
     this.progressElement.style.width = (((seek / sound.duration()) * 100) || 0) + '%'
-    // this.getTimer(this.formatTime(Math.round(seek)))
-    // progress.style.width = (((seek / sound.duration()) * 100) || 0) + '%'
-    // If the sound is still playing, continue stepping.
     if (sound.playing()) {
       requestAnimationFrame(this.step)
     }
@@ -154,8 +141,24 @@ class Player {
     // progress.style.width = '0%'
 
     // Play the new track.
-    console.log(index)
     this.play(index)
+  }
+
+  /**
+   * Set sound volume.
+   * @param  {Number} val optional Volume from 0.0 to 1.0.
+   */
+  volume = (val) => {
+    // Update the global volume (affecting all Howls).
+    Howler.volume(val)
+  }
+
+  /**
+   * Set sound muted.
+   * @param  {Number} val True to mute and false to unmute.
+   */
+  mute = (val) => {
+    Howler.mute(val)
   }
 
   /**
@@ -171,6 +174,18 @@ class Player {
     // Convert the percent into a seek position.
     if (sound.playing()) {
       sound.seek(sound.duration() * per)
+    }
+  }
+
+  /**
+   * Seek to a new position in the currently playing track.
+   * @param  {Number} val seconds through the song to skip.
+   */
+  seekBySeconds = (val) => {
+    const sound = this.playlist[this.index].howl
+    if (sound.playing()) {
+      this.progressElement.style.width = (sound.duration() / val * 100) + '%'
+      sound.seek(val)
     }
   }
 
