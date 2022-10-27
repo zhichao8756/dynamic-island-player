@@ -1,4 +1,5 @@
 # vue-dynamic-island-player
+<img src="https://m1.im5i.com/2022/10/27/UV9VR3.gif">
 
 ## Description
 a vue-audio-player based on Howler.js,The animation of the player is interacted with reference to IOS dynamic island.
