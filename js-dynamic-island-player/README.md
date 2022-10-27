@@ -36,8 +36,8 @@ $ npm i vue-dynamic-island-player
 ## Quick Start
 ```javascript
 <script setup>
-import { DynamicIslandPlayer } from 'js-dynamic-island-player'
-import "../node_modules/js-dynamic-island-player/style.css"; //引入组件样式
+import { DynamicIslandPlayer } from 'vue-dynamic-island-player'
+import "../node_modules/vue-dynamic-island-player/style.css"; //引入组件样式
 import { ref } from 'vue'
 
 const playList = ref([
