@@ -31,7 +31,6 @@ class Player {
       if (data.howl) {
         sound = data.howl
       } else {
-        console.log(this.html5)
         sound = data.howl = new Howl({
           src: data.file,
           html5: this.html5,

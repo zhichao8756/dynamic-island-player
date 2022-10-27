@@ -31,5 +31,18 @@
     "unplugin-vue-define-options": "^0.12.2",
     "vite": "^3.1.0",
     "vite-plugin-eslint": "^1.8.1"
-  }
+  },
+  "description": "<img src=\"https://m1.im5i.com/2022/10/27/UV9VR3.gif\">",
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhichao8756/dynamic-island-player.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhichao8756/dynamic-island-player/issues"
+  },
+  "homepage": "https://github.com/zhichao8756/dynamic-island-player#readme"
 }

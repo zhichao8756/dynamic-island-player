@@ -5,10 +5,18 @@ import { DynamicIslandPlayer } from '@/components/index.js'
 import { ref } from 'vue'
 // import song1 from '@/assets/audio/rave_digger.mp3'
 // import song2 from '@/assets/audio/80s_vibe.mp3'
-// import cover1 from '@/assets/cover1.png'
+import cover1 from '@/assets/vue.svg'
 // import cover2 from '@/assets/cover2.png'
 const player = ref()
-const playList = ref([])
+const playList = ref([
+  {
+    title: 'Rave Digger',
+    file: 'http://music.163.com/song/media/outer/url?id=447925558.mp3',
+    howl: null,
+    author: 'Cherrystones',
+    cover: cover1
+  }
+])
 function test () {
   console.log('233223')
 }
@@ -65,6 +73,8 @@ function getState () {
       @pause="pause"
       @previous="previous"
       @animation-small="test" />
+  </div>
+  <div class="control-area">
     <button @click="getState">get sound state</button>
     <button @click="set">set volume</button>
     <button @click="setMute">set mute</button>
@@ -89,5 +99,8 @@ function getState () {
   overflow: hidden;
   background-image: url(https://www.apple.com.cn/v/iphone-14-pro/a/images/overview/dynamic-island/dynamic_hw__btl4fomgspyu_large.png);
   background-size: 100% 100%;
+}
+.control-area button{
+  margin: 10px 10px;
 }
 </style>

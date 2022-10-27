@@ -122,7 +122,7 @@ watch(
     }
   })
 function play () {
-  if (props.animateState === 'smaller') {
+  if (props.animateState === 'smaller' && coverAnimation.value) {
     coverAnimation.value.play()
   }
   playerInst.value.play().then(res => {
@@ -130,6 +130,7 @@ function play () {
     songInfo.author = res.author
     songInfo.cover = res.cover
     initWave()
+    coverAnimate()
   })
 }
 function initPlayer () {

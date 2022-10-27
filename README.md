@@ -67,30 +67,30 @@ const playList = ref([
 ```
 ## API Docs
 ### Props Attributes
-| Attribute | Description                      | type    | Accepted Values | default|
-|-----------|----------------------------------|---------|-----------------|--------|
-| playList  | songs of list                    | Array   | -               | -      |
-| volume    | sound volume                     | Number  | `0.0` ~ `1.0`   | `0.5 ` |
-| html5     | set to true to force HTML5 Audio | Boolean | `true`/ `false` | `true `|
+| Attribute  | Description                      | type    | Accepted Values | default |
+|------------|----------------------------------|---------|-----------------|---------|
+| `playList` | songs of list                    | Array   | -               | -       |
+| `volume`   | sound volume                     | Number  | `0.0` ~ `1.0`   | `0.5 `  |
+| `html5`    | set to true to force HTML5 Audio | Boolean | `true`/ `false` | `true ` |
 
 ### Methods
-| Methods         | Description                                          | Parameters                                            |
-|-----------------|------------------------------------------------------|-------------------------------------------------------|
-| getSoundState() | return the current sound state (`playing` / `pause`) | -                                                     |
-| setVolume()     | set sound volume, range `0.0` to `1.0 `              | `function(0.8)`                                       |
-| setMute()       | Mutes the sound, but doesn't pause the playback      | `function(Boolean)` True to mute and false to unmute. |
-| seekBySeconds() | Get/set the position of playback for a sound         | `function(Number)` skip to a second of sound.         |
-| toggle()        | toggle the sound play or /pause                      | -                                                     |
-| playNext()      | skip to next song                                    | -                                                     |
-| playPrevious()  | back to previous song                                | -                                                     |
+| Methods           | Description                                          | Parameters                                            |
+|-------------------|------------------------------------------------------|-------------------------------------------------------|
+| `getSoundState()` | return the current sound state (`playing` / `pause`) | -                                                     |
+| `setVolume()`     | set sound volume, range `0.0` to `1.0 `              | `function(0.8)`                                       |
+| `setMute() `      | Mutes the sound, but doesn't pause the playback      | `function(Boolean)` True to mute and false to unmute. |
+| `seekBySeconds()` | Get/set the position of playback for a sound         | `function(Number)` skip to a second of sound.         |
+| `toggle()`        | toggle the sound play or /pause                      | -                                                     |
+| `playNext()`      | skip to next song                                    | -                                                     |
+| `playPrevious()`  | back to previous song                                | -                                                     |
 
 ### Events
-| Event Name	 | Description                   | Parameters |
-|-------------|-------------------------------|------------|
-| play        | triggers when click play      | -          |
-| pause       | triggers when click pause     | -          |
-| next        | triggers when click next      | -          |
-| previous    | triggers when click previous  | -          |
+| Event Name	 | Description                  | Parameters |
+|-------------|------------------------------|------------|
+| `play`      | triggers when click play     | -          |
+| `pause`     | triggers when click pause    | -          |
+| `next`      | triggers when click next     | -          |
+| `previous`  | triggers when click previous | -          |
 
 ## License
 
