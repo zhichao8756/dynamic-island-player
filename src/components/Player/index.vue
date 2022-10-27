@@ -130,7 +130,9 @@ function play () {
     songInfo.author = res.author
     songInfo.cover = res.cover
     initWave()
-    coverAnimate()
+    if (props.animateState === 'smaller' && coverAnimation.value === null) {
+      coverAnimate()
+    }
   })
 }
 function initPlayer () {
