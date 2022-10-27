@@ -36,6 +36,9 @@ function next () {
 function previous () {
   console.log('previous')
 }
+function pause () {
+  console.log('pause')
+}
 function set () {
   player.value.setVolume(0.9)
 }
@@ -57,6 +60,9 @@ function playNext () {
 function playPrevious () {
   player.value.playPrevious()
 }
+function getState () {
+  console.log(player.value.getSoundState())
+}
 </script>
 
 <template>
@@ -65,9 +71,16 @@ function playPrevious () {
 
     </div>-->
     <DynamicIslandPlayer
-      ref="player" :play-list="playList" :volume="0.8" @play="play" @next="next"
+      ref="player"
+      :play-list="playList"
+      :volume="0.8"
+      :html5="true"
+      @play="play"
+      @next="next"
+      @pause="pause"
       @previous="previous"
-      @animationSmall="test" />
+      @animation-small="test" />
+    <button @click="getState">get sound state</button>
     <button @click="set">set volume</button>
     <button @click="setMute">set mute</button>
     <button @click="setSound">set sound</button>

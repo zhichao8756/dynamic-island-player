@@ -6,11 +6,12 @@ const store = usePlayerStore(pinia)
 const { title, author, cover } = storeToRefs(store)
 
 class Player {
-  constructor (playlist, timeElement, progressElement, durationElement) {
+  constructor (playlist, timeElement, progressElement, durationElement, html5) {
     this.playlist = playlist
     this.timeElement = timeElement
     this.progressElement = progressElement
     this.durationElement = durationElement
+    this.html5 = html5
     this.index = 0
   }
 
@@ -30,9 +31,10 @@ class Player {
       if (data.howl) {
         sound = data.howl
       } else {
+        console.log(this.html5)
         sound = data.howl = new Howl({
           src: data.file,
-          html5: true,
+          html5: this.html5,
           onplay: () => {
             totalTime = this.formatTime(Math.round(sound.duration()))
             this.durationElement.innerHTML = totalTime

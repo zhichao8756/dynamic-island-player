@@ -7,6 +7,7 @@
         :animate-state="animationState"
         :play-list="playList"
         :volume="volume"
+        :html5="html5"
         @play="play"
         @pause="pause"
         @next="next"
@@ -32,6 +33,10 @@ const props = defineProps({
   volume: {
     type: Number,
     default: 0.5
+  },
+  html5: {
+    type: Boolean,
+    default: true
   }
 })
 const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])

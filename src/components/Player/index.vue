@@ -54,13 +54,20 @@ const props = defineProps({
     type: String,
     default: 'smaller'
   },
+  // song list
   playList: {
     type: Array,
     default: () => []
   },
+  // The volume of the specific track, from 0.0 to 1.0.
   volume: {
     type: Number,
     default: 0.5
+  },
+  // Set to true to force HTML5 Audio
+  html5: {
+    type: Boolean,
+    default: true
   }
 })
 const emit = defineEmits(['play', 'pause', 'previous', 'next'])
@@ -127,7 +134,7 @@ function play () {
 }
 function initPlayer () {
   // 此处添加target 查询目标dom
-  playerInst.value = new Player(props.playList, track.value, progress.value, duration.value)
+  playerInst.value = new Player(props.playList, track.value, progress.value, duration.value, props.html5)
   playerInst.value.volume(props.volume)
 }
 function stop () {
