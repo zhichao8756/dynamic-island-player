@@ -3,27 +3,12 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { DynamicIslandPlayer } from '@/components/index.js'
 import { ref } from 'vue'
-import song1 from '@/assets/audio/rave_digger.mp3'
-import song2 from '@/assets/audio/80s_vibe.mp3'
-import cover1 from '@/assets/cover1.png'
-import cover2 from '@/assets/cover2.png'
+// import song1 from '@/assets/audio/rave_digger.mp3'
+// import song2 from '@/assets/audio/80s_vibe.mp3'
+// import cover1 from '@/assets/cover1.png'
+// import cover2 from '@/assets/cover2.png'
 const player = ref()
-const playList = ref([
-  {
-    title: 'Rave Digger',
-    file: song1,
-    howl: null,
-    author: 'Cherrystones',
-    cover: cover1
-  },
-  {
-    title: '80s Vibe',
-    file: song2,
-    howl: null,
-    author: 'Tory Lanez',
-    cover: cover2
-  }
-])
+const playList = ref([])
 function test () {
   console.log('233223')
 }
