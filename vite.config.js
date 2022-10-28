@@ -6,7 +6,10 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), DefineOptions()],
+  plugins: [
+    vue(),
+    DefineOptions()
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

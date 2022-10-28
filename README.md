@@ -55,11 +55,15 @@ const playList = ref([
     cover: cover1
 }
 ])
+const player = ref()
+player.value.toggle()
+player.value.playPrevious()
+    ...
 </script>
 
 <template>
     <div>
-        <DynamicIslandPlayer/>
+        <DynamicIslandPlayer ref="player"/>
     </div>
 </template>
 
