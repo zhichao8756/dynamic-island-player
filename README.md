@@ -19,7 +19,6 @@ welcome to create issue, help improve the player :)
 ### Browser Compatibility
 Tested in the following browsers/versions:
 * Google Chrome 7.0+
-* Internet Explorer 9.0+
 * Firefox 4.0+
 * Safari 5.1.4+
 * Mobile Safari 6.0+ (after user input)
