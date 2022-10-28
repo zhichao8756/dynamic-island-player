@@ -94,6 +94,7 @@ onMounted(async () => {
   await nextTick()
   initWave()
   initPlayer()
+  coverAnimate()
 })
 // auto toggle next song
 watch(title, (newValue, oldValue) => {
@@ -116,13 +117,14 @@ watch(
     }
     if (newval === 'smaller') {
       smaller()
+      coverAnimate()
       if (soundState.value === 'playing') {
-        coverAnimate()
+        coverAnimation.value.play()
       }
     }
   })
 function play () {
-  if (props.animateState === 'smaller' && coverAnimation.value) {
+  if (props.animateState === 'smaller' && coverAnimation.value !== null) {
     coverAnimation.value.play()
   }
   playerInst.value.play().then(res => {
@@ -130,9 +132,10 @@ function play () {
     songInfo.author = res.author
     songInfo.cover = res.cover
     initWave()
-    if (props.animateState === 'smaller' && coverAnimation.value === null) {
+    /* if (props.animateState === 'smaller') {
+      console.log(223344)
       coverAnimate()
-    }
+    } */
   })
 }
 function initPlayer () {
@@ -321,6 +324,7 @@ function coverAnimate () {
       easing: 'linear'
     },
     loop: true,
+    autoplay: false,
     easing: 'linear',
     duration: 200
   })
