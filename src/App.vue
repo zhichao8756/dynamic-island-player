@@ -7,6 +7,7 @@ import { ref } from 'vue'
 // import song2 from '@/assets/audio/80s_vibe.mp3'
 import cover1 from '@/assets/vue.svg'
 // import cover2 from '@/assets/cover2.png'
+
 const player = ref()
 const playList = ref([
   {

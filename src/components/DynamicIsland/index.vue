@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div ref="dynamic" class="dynamic-island" @click="start">
+    <div ref="dynamic" class="dynamic-island" :style="{background: isColor()}" @click="start">
+      <div v-if="isColor().length === 0" :style="changeTheme()" />
       <Player
         v-if="playList.length"
         ref="player"
@@ -20,7 +21,6 @@
 import { nextTick, onMounted, ref } from 'vue'
 import anime from 'animejs'
 import Player from '@/components/Player/index.vue'
-
 const dynamic = ref()
 const animationState = ref('smaller')
 const timer = ref(null)
@@ -37,6 +37,10 @@ const props = defineProps({
   html5: {
     type: Boolean,
     default: true
+  },
+  theme: {
+    type: String,
+    default: ''
   }
 })
 const emit = defineEmits(['play', 'pause', 'next', 'previous', 'animationSmall', 'animationBig', 'animationLong'])
@@ -116,6 +120,26 @@ function isClick () {
       clearInterval(timer.value)
     }
   }, 1000)
+}
+function isColor () {
+  if (props.theme[0] === '#') {
+    return props.theme
+  } else {
+    return ''
+  }
+}
+// change theme
+function changeTheme () {
+  const theme = {
+    width: '100%',
+    height: '100%',
+    borderRadius: '40px',
+    position: 'absolute',
+    background: `url(${props.theme})`,
+    backgroundSize: '100% 100%',
+    filter: 'blur(3px)'
+  }
+  return theme
 }
 const player = ref()
 /** *** @description expose  internal methods ******/
