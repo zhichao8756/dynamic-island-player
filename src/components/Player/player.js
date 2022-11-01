@@ -168,7 +168,9 @@ class Player {
    */
   rate = (val) => {
     const sound = this.playlist[this.index].howl
-    sound.rate(val)
+    if (sound) {
+      sound.rate(val)
+    }
   }
 
   /**
