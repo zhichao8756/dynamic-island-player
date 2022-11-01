@@ -79,16 +79,16 @@ player.value.playPrevious()
 | `theme`    | custom the theme                 | String  | accept `Hexadecimal color` or `picture` | -       |
 
 ### Methods
-| Methods           | Description                                                                           | Parameters                                            |
-|-------------------|---------------------------------------------------------------------------------------|-------------------------------------------------------|
-| `getSoundState()` | return the current sound state (`playing` / `pause`)                                  | -                                                     |
-| `setVolume()`     | set sound volume, range `0.0` to `1.0 `                                               | `function(0.8)`                                       |
-| `setMute() `      | Mutes the sound, but doesn't pause the playback                                       | `function(Boolean)` True to mute and false to unmute. |
-| `setRate()`       | set rate of playback, range `0.5` to `4.0`, 0.5 to 4.0, with `1.0` being normal speed | `function(2.0)`                                       |
-| `seekBySeconds()` | Get/set the position of playback for a sound                                          | `function(Number)` skip to a second of sound.         |
-| `toggle()`        | toggle the sound play or /pause                                                       | -                                                     |
-| `playNext()`      | skip to next song                                                                     | -                                                     |
-| `playPrevious()`  | back to previous song                                                                 | -                                                     |
+| Methods           | Description                                                                | Parameters                                            |
+|-------------------|----------------------------------------------------------------------------|-------------------------------------------------------|
+| `getSoundState()` | return the current sound state (`playing` / `pause`)                       | -                                                     |
+| `setVolume()`     | set sound volume, range `0.0` to `1.0 `                                    | `function(0.8)`                                       |
+| `setMute() `      | Mutes the sound, but doesn't pause the playback                            | `function(Boolean)` True to mute and false to unmute. |
+| `setRate()`       | set rate of playback, range `0.5` to `4.0`,  with `1.0` being normal speed | `function(2.0)`                                       |
+| `seekBySeconds()` | Get/set the position of playback for a sound                               | `function(Number)` skip to a second of sound.         |
+| `toggle()`        | toggle the sound play or /pause                                            | -                                                     |
+| `playNext()`      | skip to next song                                                          | -                                                     |
+| `playPrevious()`  | back to previous song                                                      | -                                                     |
 
 ### Events
 | Event Name	 | Description                  | Parameters |
