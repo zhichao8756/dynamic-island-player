@@ -167,7 +167,6 @@ class Player {
    * @param  {Number} val The rate of playback. 0.5 to 4.0, with 1.0 being normal speed.
    */
   rate = (val) => {
-    console.log(val)
     const sound = this.playlist[this.index].howl
     sound.rate(val)
   }
