@@ -343,6 +343,9 @@ function setVolume (val) {
 function setMute (val) {
   playerInst.value.mute(val)
 }
+function setRate (val) {
+  playerInst.value.rate(val)
+}
 function seekBySeconds (val) {
   playerInst.value.seekBySeconds(val)
 }
@@ -353,6 +356,8 @@ defineExpose({
   setVolume,
   /** @description set sound mute */
   setMute,
+  /** @description set rate of playback */
+  setRate,
   /** @description skip to the song by seconds */
   seekBySeconds,
   /** @description play or pause the song */

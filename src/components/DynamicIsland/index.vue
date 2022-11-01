@@ -153,6 +153,9 @@ function setVolume (val) {
 function setMute (val) {
   player.value.setMute(val)
 }
+function setRate (val) {
+  player.value.setRate(val)
+}
 function seekBySeconds (val) {
   player.value.seekBySeconds(val)
 }
@@ -187,6 +190,7 @@ defineExpose({
   getSoundState,
   setVolume,
   setMute,
+  setRate,
   seekBySeconds,
   toggle,
   playNext,

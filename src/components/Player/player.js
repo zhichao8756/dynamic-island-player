@@ -156,10 +156,20 @@ class Player {
 
   /**
    * Set sound muted.
-   * @param  {Number} val True to mute and false to unmute.
+   * @param  {Boolean} val True to mute and false to unmute.
    */
   mute = (val) => {
     Howler.mute(val)
+  }
+
+  /**
+   * Set sound rate.
+   * @param  {Number} val The rate of playback. 0.5 to 4.0, with 1.0 being normal speed.
+   */
+  rate = (val) => {
+    console.log(val)
+    const sound = this.playlist[this.index].howl
+    sound.rate(val)
   }
 
   /**

@@ -39,6 +39,9 @@ function set () {
 function setMute () {
   player.value.setMute(true)
 }
+function setRate () {
+  player.value.setRate(2.0)
+}
 function setSound () {
   player.value.setMute(false)
 }
@@ -84,6 +87,7 @@ function getState () {
     <button @click="toggle">play / pause</button>
     <button @click="playNext">next song</button>
     <button @click="playPrevious">previous song</button>
+    <button @click="setRate">set rate 2x</button>
   </div>
 </template>
 

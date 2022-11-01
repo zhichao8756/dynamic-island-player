@@ -19,7 +19,6 @@ welcome to create issue, help improve the player :)
 ### Browser Compatibility
 Tested in the following browsers/versions:
 * Google Chrome 7.0+
-* Internet Explorer 9.0+
 * Firefox 4.0+
 * Safari 5.1.4+
 * Mobile Safari 6.0+ (after user input)
@@ -71,11 +70,12 @@ player.value.playPrevious()
 ```
 ## API Docs
 ### Props Attributes
-| Attribute  | Description                      | type    | Accepted Values | default |
-|------------|----------------------------------|---------|-----------------|---------|
-| `playList` | songs of list                    | Array   | -               | -       |
-| `volume`   | sound volume                     | Number  | `0.0` ~ `1.0`   | `0.5 `  |
-| `html5`    | set to true to force HTML5 Audio | Boolean | `true`/ `false` | `true ` |
+| Attribute  | Description                      | type    | Accepted Values                         | default |
+|------------|----------------------------------|---------|-----------------------------------------|---------|
+| `playList` | songs of list                    | Array   | -                                       | -       |
+| `volume`   | sound volume                     | Number  | `0.0` ~ `1.0`                           | `0.5 `  |
+| `html5`    | set to true to force HTML5 Audio | Boolean | `true`/ `false`                         | `true ` |
+| `theme`    | custom the theme                 | String  | accept `Hexadecimal color` or `picture` | -       |
 
 ### Methods
 | Methods           | Description                                          | Parameters                                            |
